@@ -18,7 +18,7 @@ export default function RegisterIndividualPage() {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/dashboard");
+    router.push("/dashboard/home");
   };
 
   return (

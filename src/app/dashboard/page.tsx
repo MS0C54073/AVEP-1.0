@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   BotMessageSquare,
   FileBox,
+  Home,
   Landmark,
   LayoutDashboard,
   ReceiptText,
@@ -93,7 +94,7 @@ export default function DashboardPage() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/dashboard/home" className="flex items-center gap-2">
             <Landmark className="text-primary size-8" />
             <h1 className="text-2xl font-semibold text-sidebar-foreground">
               AVEP
@@ -101,6 +102,14 @@ export default function DashboardPage() {
           </Link>
         </SidebarHeader>
         <SidebarMenu>
+           <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/home">
+                <Home />
+                Home
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={() => handleTabChange("overview")} isActive={activeTab === 'overview'}>
               <LayoutDashboard />

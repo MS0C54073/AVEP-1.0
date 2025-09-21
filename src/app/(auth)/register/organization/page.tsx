@@ -18,7 +18,7 @@ export default function RegisterOrganizationPage() {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/dashboard");
+    router.push("/dashboard/home");
   };
 
   return (
