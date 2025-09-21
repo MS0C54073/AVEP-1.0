@@ -33,6 +33,15 @@ export type ManualAsset = {
     verificationProgress: number;
 }
 
+export type Client = {
+    id: string;
+    name: string;
+    contact: string;
+    type: "Organization" | "Individual";
+    status: "Active" | "Inactive";
+    avatar: string;
+}
+
 export const user: User = {
   id: "user_1",
   name: "Alex Doe",
@@ -93,6 +102,33 @@ export const manualAssets: ManualAsset[] = [
     { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100 },
     { id: "mass_2", userId: "user_1", category: "Electronics", name: "MacBook Pro 16\"", value: 2500, verificationStatus: "In Progress", verificationProgress: 45 },
     { id: "mass_3", userId: "user_1", category: "Real Estate", name: "Downtown Apartment", value: 350000, verificationStatus: "Pending", verificationProgress: 10 },
+];
+
+export const clients: Client[] = [
+    {
+        id: "client-1",
+        name: "Innovate Inc.",
+        contact: "contact@innovate.com",
+        type: "Organization",
+        status: "Active",
+        avatar: "https://picsum.photos/seed/client1/40/40"
+    },
+    {
+        id: "client-2",
+        name: "Jane Smith",
+        contact: "jane.smith@email.com",
+        type: "Individual",
+        status: "Active",
+        avatar: "https://picsum.photos/seed/client2/40/40"
+    },
+    {
+        id: "client-3",
+        name: "Tech Solutions Ltd.",
+        contact: "support@techsolutions.com",
+        type: "Organization",
+        status: "Inactive",
+        avatar: "https://picsum.photos/seed/client3/40/40"
+    }
 ];
 
 

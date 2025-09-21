@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   BotMessageSquare,
+  FileBox,
   Landmark,
   LayoutDashboard,
   ReceiptText,
@@ -23,7 +24,6 @@ import {
   SidebarProvider,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -42,16 +42,41 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
-import { accounts, transactions, user, manualAssets } from "@/lib/data";
+import { accounts as allAccounts, transactions as allTransactions, user, manualAssets } from "@/lib/data";
 import { UserNav } from "@/components/dashboard/user-nav";
 import AiSummaryTool from "@/components/dashboard/ai-summary-tool";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddAssetDialog } from "@/components/dashboard/add-asset-dialog";
 import { ManualAssetCard } from "@/components/dashboard/manual-asset-card";
+import { GlobalSearch } from "@/components/dashboard/global-search";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
-  const totalAssets = accounts.reduce((sum, account) => sum + account.balance, 0);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const totalAssets = allAccounts.reduce((sum, account) => sum + account.balance, 0);
+
+  const filteredTransactions = allTransactions.filter(tx =>
+    tx.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleTabChange = (value: string) => {
+    if (value.startsWith('/')) {
+        // This is a navigation, not a tab change
+        return;
+    }
+    if (value.startsWith('#')) {
+      const tabName = value.substring(1);
+      setActiveTab(tabName);
+       // Scroll to the element
+      const element = document.getElementById(tabName);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      setActiveTab(value);
+    }
+  }
 
   return (
     <SidebarProvider>
@@ -66,21 +91,29 @@ export default function DashboardPage() {
         </SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => setActiveTab("overview")} isActive={activeTab === 'overview'}>
+            <SidebarMenuButton onClick={() => handleTabChange("overview")} isActive={activeTab === 'overview'}>
               <LayoutDashboard />
               Dashboard
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => setActiveTab("transactions")} isActive={activeTab === 'transactions'}>
+            <SidebarMenuButton onClick={() => handleTabChange("transactions")} isActive={activeTab === 'transactions'}>
               <ReceiptText />
               Transactions
             </SidebarMenuButton>
           </SidebarMenuItem>
            <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => setActiveTab("ai-summary")} isActive={activeTab === 'ai-summary'}>
+            <SidebarMenuButton onClick={() => handleTabChange("ai-summary")} isActive={activeTab === 'ai-summary'}>
               <BotMessageSquare />
               AI Summary
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+           <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/add-asset">
+                <FileBox />
+                Assets
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -106,16 +139,7 @@ export default function DashboardPage() {
       <SidebarInset className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
           <div className="w-full flex-1">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search clients or transactions..."
-                  className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-                />
-              </div>
-            </form>
+            <GlobalSearch />
           </div>
           <UserNav user={user} />
         </header>
@@ -127,7 +151,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="transactions">Transactions</TabsTrigger>
@@ -147,7 +171,7 @@ export default function DashboardPage() {
                       ${totalAssets.toLocaleString()}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Across {accounts.length} linked accounts
+                      Across {allAccounts.length} linked accounts
                     </p>
                   </CardContent>
                 </Card>
@@ -159,7 +183,7 @@ export default function DashboardPage() {
                     <Users className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{accounts.length}</div>
+                    <div className="text-2xl font-bold">{allAccounts.length}</div>
                      <p className="text-xs text-muted-foreground">
                       Individual and organizational
                     </p>
@@ -206,7 +230,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {accounts.map((account) => (
+                    {allAccounts.map((account) => (
                       <div key={account.id} className="flex items-center">
                         <Image
                           alt={`${account.bankName} logo`}
@@ -253,14 +277,14 @@ export default function DashboardPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {transactions.map((tx) => (
+                      {filteredTransactions.map((tx) => (
                         <TableRow key={tx.id}>
                           <TableCell>{tx.date}</TableCell>
                           <TableCell className="font-medium">
                             {tx.description}
                           </TableCell>
                           <TableCell>
-                            {accounts.find(a => a.id === tx.accountId)?.bankName} ...{accounts.find(a => a.id === tx.accountId)?.accountNumber.slice(-4)}
+                            {allAccounts.find(a => a.id === tx.accountId)?.bankName} ...{allAccounts.find(a => a.id === tx.accountId)?.accountNumber.slice(-4)}
                           </TableCell>
                           <TableCell
                             className={`text-right font-semibold ${
@@ -286,5 +310,3 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
-
-    
