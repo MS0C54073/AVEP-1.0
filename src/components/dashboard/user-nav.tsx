@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/lib/data";
-import { PlaceHolderImages as placeholderImages } from "@/lib/placeholder-images";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 type UserNavProps = {
   user: User;
@@ -27,7 +27,7 @@ export function UserNav({ user }: UserNavProps) {
       .toUpperCase();
   };
   
-  const avatarUrl = placeholderImages.find(p => p.id === 'user-avatar')?.imageUrl ?? "https://picsum.photos/seed/1/100/100";
+  const avatarUrl = PlaceHolderImages.find(p => p.id === 'user-avatar')?.imageUrl ?? "https://picsum.photos/seed/1/100/100";
 
   return (
     <DropdownMenu>
