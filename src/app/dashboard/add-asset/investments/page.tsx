@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets, updateManualAsset } from '@/lib/data';
+import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddInvestmentsPage() {
   const router = useRouter();
@@ -39,22 +39,23 @@ export default function AddInvestmentsPage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
+    const assetData = { 
+        name: data['investment-name'],
+        value: Number(data.value),
+        details: {
+            investmentType: data['investment-type'],
+            quantity: data.quantity,
+            description: data.description,
+            company: data['investment-name'],
+        }
+    };
+
     if (isEditing && assetId) {
-        updateManualAsset(assetId, { 
-            name: data['investment-name'],
-            value: Number(data.value),
-            details: {
-                investmentType: data['investment-type'],
-                quantity: data.quantity,
-                description: data.description,
-                company: data['investment-name'],
-            }
-        });
-        router.push('/dashboard');
+        updateManualAsset(assetId, assetData);
     } else {
-        // Handle new asset creation
-        console.log(data);
+        createManualAsset({ category: "Investments", ...assetData });
     }
+    router.push('/dashboard');
   };
 
   return (

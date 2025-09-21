@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets, updateManualAsset } from '@/lib/data';
+import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddJewelryPage() {
   const router = useRouter();
@@ -37,20 +37,21 @@ export default function AddJewelryPage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
+    const assetData = { 
+        name: data['item-type'],
+        value: Number(data.value),
+        details: {
+            itemType: data['item-type'],
+            description: data.description,
+        }
+    };
+      
     if (isEditing && assetId) {
-        updateManualAsset(assetId, { 
-            name: data['item-type'],
-            value: Number(data.value),
-            details: {
-                itemType: data['item-type'],
-                description: data.description,
-            }
-        });
-        router.push('/dashboard');
+        updateManualAsset(assetId, assetData);
     } else {
-        // Handle new asset creation
-        console.log(data);
+        createManualAsset({ category: "Jewelry", ...assetData });
     }
+    router.push('/dashboard');
   };
 
   return (

@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { manualAssets, updateManualAsset } from '@/lib/data';
+import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddVehiclePage() {
   const router = useRouter();
@@ -48,26 +48,27 @@ export default function AddVehiclePage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
+    const name = `${data.make} ${data.model} ${data.year}`;
+    const assetData = { 
+        name,
+        value: Number(data.value),
+        details: {
+            vehicleType: data['vehicle-type'],
+            make: data.make,
+            model: data.model,
+            year: data.year,
+            vin: data.vin,
+            registrationNumber: data['registration-number'],
+            whiteBookDetails: data['white-book-details'],
+        }
+    };
+      
     if (isEditing && assetId) {
-        const name = `${data.make} ${data.model} ${data.year}`;
-        updateManualAsset(assetId, { 
-            name,
-            value: Number(data.value),
-            details: {
-                vehicleType: data['vehicle-type'],
-                make: data.make,
-                model: data.model,
-                year: data.year,
-                vin: data.vin,
-                registrationNumber: data['registration-number'],
-                whiteBookDetails: data['white-book-details'],
-            }
-        });
-        router.push('/dashboard');
+        updateManualAsset(assetId, assetData);
     } else {
-        // Handle new asset creation
-        console.log(data);
+        createManualAsset({ category: "Vehicle", ...assetData });
     }
+    router.push('/dashboard');
   };
 
   return (

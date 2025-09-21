@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { manualAssets, updateManualAsset } from '@/lib/data';
+import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddElectronicsPage() {
     const router = useRouter();
@@ -47,25 +47,26 @@ export default function AddElectronicsPage() {
     }, [assetId, setValue]);
 
     const onSubmit = (data:any) => {
+        const name = `${data.brand} ${data.model}`;
+        const assetData = { 
+            name,
+            value: Number(data.value),
+            details: {
+                type: data.type,
+                brand: data.brand,
+                model: data.model,
+                serialNumber: data['serial-number'],
+                purchaseDate: data['purchase-date'],
+                purchasePrice: data['purchase-price'],
+            }
+        };
+
         if (isEditing && assetId) {
-            const name = `${data.brand} ${data.model}`;
-            updateManualAsset(assetId, { 
-                name,
-                value: Number(data.value),
-                details: {
-                    type: data.type,
-                    brand: data.brand,
-                    model: data.model,
-                    serialNumber: data['serial-number'],
-                    purchaseDate: data['purchase-date'],
-                    purchasePrice: data['purchase-price'],
-                }
-            });
-            router.push('/dashboard');
+            updateManualAsset(assetId, assetData);
         } else {
-            // Handle new asset creation
-            console.log(data);
+            createManualAsset({ category: "Electronics", ...assetData });
         }
+        router.push('/dashboard');
     };
 
   return (

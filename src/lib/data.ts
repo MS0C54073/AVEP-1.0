@@ -151,6 +151,18 @@ export const getAssetDataForAI = () => {
     return content;
 }
 
+export const createManualAsset = (newAsset: Omit<ManualAsset, 'id' | 'userId' | 'verificationStatus' | 'verificationProgress'>) => {
+    const asset: ManualAsset = {
+        id: `mass_${new Date().getTime()}`,
+        userId: user.id,
+        verificationStatus: "Pending",
+        verificationProgress: 10,
+        ...newAsset,
+    };
+    manualAssets.push(asset);
+};
+
+
 export const deleteManualAsset = (assetId: string) => {
     manualAssets = manualAssets.filter(asset => asset.id !== assetId);
 }

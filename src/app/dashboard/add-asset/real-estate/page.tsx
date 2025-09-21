@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets, updateManualAsset } from '@/lib/data';
+import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddRealEstatePage() {
   const router = useRouter();
@@ -47,24 +47,25 @@ export default function AddRealEstatePage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
+    const name = `${data.address}, ${data.city}`;
+    const assetData = { 
+        name,
+        value: Number(data.value),
+        details: {
+            propertyType: data['property-type'],
+            address: data.address,
+            city: data.city,
+            country: data.country,
+            deedNumber: data['deed-number'],
+        }
+    };
+      
     if (isEditing && assetId) {
-        const name = `${data.address}, ${data.city}`;
-        updateManualAsset(assetId, { 
-            name,
-            value: Number(data.value),
-            details: {
-                propertyType: data['property-type'],
-                address: data.address,
-                city: data.city,
-                country: data.country,
-                deedNumber: data['deed-number'],
-            }
-        });
-        router.push('/dashboard');
+        updateManualAsset(assetId, assetData);
     } else {
-        // Handle new asset creation
-        console.log(data);
+        createManualAsset({ category: "Real Estate", ...assetData });
     }
+    router.push('/dashboard');
   };
 
   return (
