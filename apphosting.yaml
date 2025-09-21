@@ -1,5 +1,7 @@
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
+# This file is used for your production deployment, not the live preview URL,
+# which is managed by the Firebase Studio environment.
 
 runConfig:
   # Increase this value if you'd like to automatically spin up
