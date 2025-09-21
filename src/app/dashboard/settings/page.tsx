@@ -8,8 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
+import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
   return (
@@ -22,16 +23,7 @@ export default function SettingsPage() {
             </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                        <Label className="text-base">Dark Mode</Label>
-                        <p className="text-sm text-muted-foreground">
-                            Enable or disable dark mode for the application.
-                        </p>
-                    </div>
-                    <Switch />
-                </div>
-
+                <ThemeToggle />
                 <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                         <Label className="text-base">Email Notifications</Label>
