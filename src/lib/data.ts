@@ -154,3 +154,9 @@ export const getAssetDataForAI = () => {
 export const deleteManualAsset = (assetId: string) => {
     manualAssets = manualAssets.filter(asset => asset.id !== assetId);
 }
+
+export const updateManualAsset = (assetId: string, updatedAsset: Partial<ManualAsset>) => {
+    manualAssets = manualAssets.map(asset => 
+        asset.id === assetId ? { ...asset, ...updatedAsset, details: {...asset.details, ...updatedAsset.details} } : asset
+    );
+};

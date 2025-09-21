@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -22,18 +22,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddVehiclePage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
-  const { register, handleSubmit, setValue, watch } = useForm();
+  const { register, handleSubmit, setValue, watch, control } = useForm();
   const isEditing = !!assetId;
 
   useEffect(() => {
     if (assetId) {
       const asset = manualAssets.find(a => a.id === assetId);
       if (asset && asset.category === "Vehicle") {
+        setValue("vehicle-type", asset.details?.vehicleType);
         setValue("make", asset.details?.make);
         setValue("model", asset.details?.model);
         setValue("year", asset.details?.year);
@@ -45,8 +47,25 @@ export default function AddVehiclePage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
-    console.log(data);
-    // Here you would handle form submission
+    if (isEditing && assetId) {
+        const name = `${data.make} ${data.model} ${data.year}`;
+        updateManualAsset(assetId, { 
+            name,
+            value: Number(data.value),
+            details: {
+                vehicleType: data['vehicle-type'],
+                make: data.make,
+                model: data.model,
+                year: data.year,
+                vin: data.vin,
+                registrationNumber: data['registration-number'],
+            }
+        });
+        router.push('/dashboard');
+    } else {
+        // Handle new asset creation
+        console.log(data);
+    }
   };
 
   return (
@@ -61,7 +80,7 @@ export default function AddVehiclePage() {
         <CardContent className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="vehicle-type">Vehicle Type</Label>
-            <Select defaultValue="car" {...register("vehicle-type")}>
+            <Select onValueChange={(value) => setValue('vehicle-type', value)} defaultValue={watch('vehicle-type')}>
               <SelectTrigger id="vehicle-type">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>

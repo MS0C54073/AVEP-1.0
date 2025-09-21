@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddJewelryPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
   const { register, handleSubmit, setValue, watch } = useForm();
@@ -36,7 +37,20 @@ export default function AddJewelryPage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
-    console.log(data);
+    if (isEditing && assetId) {
+        updateManualAsset(assetId, { 
+            name: data['item-type'],
+            value: Number(data.value),
+            details: {
+                itemType: data['item-type'],
+                description: data.description,
+            }
+        });
+        router.push('/dashboard');
+    } else {
+        // Handle new asset creation
+        console.log(data);
+    }
   };
 
   return (

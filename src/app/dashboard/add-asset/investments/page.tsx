@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddInvestmentsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
   const { register, handleSubmit, setValue, watch } = useForm();
@@ -28,7 +29,7 @@ export default function AddInvestmentsPage() {
     if (assetId) {
       const asset = manualAssets.find(a => a.id === assetId);
       if (asset && asset.category === "Investments") {
-        setValue("investment-name", asset.details?.company);
+        setValue("investment-name", asset.name);
         setValue("investment-type", asset.details?.investmentType);
         setValue("quantity", asset.details?.quantity);
         setValue("value", asset.value);
@@ -38,7 +39,22 @@ export default function AddInvestmentsPage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
-    console.log(data);
+    if (isEditing && assetId) {
+        updateManualAsset(assetId, { 
+            name: data['investment-name'],
+            value: Number(data.value),
+            details: {
+                investmentType: data['investment-type'],
+                quantity: data.quantity,
+                description: data.description,
+                company: data['investment-name'],
+            }
+        });
+        router.push('/dashboard');
+    } else {
+        // Handle new asset creation
+        console.log(data);
+    }
   };
 
   return (

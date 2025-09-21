@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -22,32 +22,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddElectronicsPage() {
-  const searchParams = useSearchParams();
-  const assetId = searchParams.get('assetId');
-  const { register, handleSubmit, setValue, watch } = useForm();
-  const isEditing = !!assetId;
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const { register, handleSubmit, setValue, watch } = useForm();
+    const isEditing = !!assetId;
 
-  useEffect(() => {
-    if (assetId) {
-      const asset = manualAssets.find(a => a.id === assetId);
-      if (asset && asset.category === "Electronics") {
-        setValue("type", asset.details?.type.toLowerCase().replace(' ', ''));
-        setValue("brand", asset.details?.brand);
-        setValue("model", asset.details?.model);
-        setValue("serial-number", asset.details?.serialNumber);
-        setValue("purchase-date", asset.details?.purchaseDate);
-        setValue("purchase-price", asset.details?.purchasePrice);
-        setValue("value", asset.value);
-      }
-    }
-  }, [assetId, setValue]);
+    useEffect(() => {
+        if (assetId) {
+        const asset = manualAssets.find(a => a.id === assetId);
+        if (asset && asset.category === "Electronics") {
+            setValue("type", asset.details?.type.toLowerCase().replace(' ', ''));
+            setValue("brand", asset.details?.brand);
+            setValue("model", asset.details?.model);
+            setValue("serial-number", asset.details?.serialNumber);
+            setValue("purchase-date", asset.details?.purchaseDate);
+            setValue("purchase-price", asset.details?.purchasePrice);
+            setValue("value", asset.value);
+        }
+        }
+    }, [assetId, setValue]);
 
-  const onSubmit = (data:any) => {
-    console.log(data);
-  };
+    const onSubmit = (data:any) => {
+        if (isEditing && assetId) {
+            const name = `${data.brand} ${data.model}`;
+            updateManualAsset(assetId, { 
+                name,
+                value: Number(data.value),
+                details: {
+                    type: data.type,
+                    brand: data.brand,
+                    model: data.model,
+                    serialNumber: data['serial-number'],
+                    purchaseDate: data['purchase-date'],
+                    purchasePrice: data['purchase-price'],
+                }
+            });
+            router.push('/dashboard');
+        } else {
+            // Handle new asset creation
+            console.log(data);
+        }
+    };
 
   return (
     <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
@@ -61,7 +80,7 @@ export default function AddElectronicsPage() {
         <CardContent className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="type">Type</Label>
-            <Select defaultValue="laptop" {...register("type")}>
+            <Select onValueChange={(value) => setValue('type', value)} defaultValue={watch('type')}>
               <SelectTrigger id="type">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>

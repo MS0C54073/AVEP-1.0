@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddRealEstatePage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
   const { register, handleSubmit, setValue, watch } = useForm();
@@ -46,7 +47,24 @@ export default function AddRealEstatePage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
-    console.log(data);
+    if (isEditing && assetId) {
+        const name = `${data.address}, ${data.city}`;
+        updateManualAsset(assetId, { 
+            name,
+            value: Number(data.value),
+            details: {
+                propertyType: data['property-type'],
+                address: data.address,
+                city: data.city,
+                country: data.country,
+                deedNumber: data['deed-number'],
+            }
+        });
+        router.push('/dashboard');
+    } else {
+        // Handle new asset creation
+        console.log(data);
+    }
   };
 
   return (
@@ -61,7 +79,7 @@ export default function AddRealEstatePage() {
         <CardContent className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="property-type">Property Type</Label>
-            <Select defaultValue="residential" {...register("property-type")}>
+            <Select onValueChange={(value) => setValue('property-type', value)} defaultValue={watch('property-type')}>
               <SelectTrigger id="property-type">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>

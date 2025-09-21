@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { manualAssets } from '@/lib/data';
+import { manualAssets, updateManualAsset } from '@/lib/data';
 
 export default function AddOtherAssetPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
   const { register, handleSubmit, setValue, watch } = useForm();
@@ -37,7 +38,20 @@ export default function AddOtherAssetPage() {
   }, [assetId, setValue]);
 
   const onSubmit = (data:any) => {
-    console.log(data);
+     if (isEditing && assetId) {
+        updateManualAsset(assetId, { 
+            name: data['asset-name'],
+            value: Number(data.value),
+            details: {
+                category: data['asset-category'],
+                description: data.description,
+            }
+        });
+        router.push('/dashboard');
+    } else {
+        // Handle new asset creation
+        console.log(data);
+    }
   };
 
   return (
@@ -75,7 +89,7 @@ export default function AddOtherAssetPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
+          <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
     </AssetFormLayout>
