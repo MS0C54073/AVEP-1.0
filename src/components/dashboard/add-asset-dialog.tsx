@@ -36,7 +36,7 @@ export function AddAssetDialog() {
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-          <Link href="#">
+          <Link href="/dashboard/link-account">
             <Card className="h-full hover:bg-muted/50 transition-colors">
               <CardHeader>
                 <div className="flex items-center gap-4">
