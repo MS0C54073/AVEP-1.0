@@ -1,3 +1,17 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "user-avatar",
+      "description": "A placeholder for a user's avatar image.",
+      "imageUrl": "https://picsum.photos/seed/1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "bank-logo",
+      "description": "A generic placeholder for a bank's logo.",
+      "imageUrl": "https://picsum.photos/seed/bank/40/40",
+      "imageHint": "bank building"
+    }
+  ]
 }
