@@ -1,3 +1,9 @@
+
+"use client";
+
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,72 +22,99 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { manualAssets } from '@/lib/data';
 
 export default function AddElectronicsPage() {
+  const searchParams = useSearchParams();
+  const assetId = searchParams.get('assetId');
+  const { register, handleSubmit, setValue, watch } = useForm();
+  const isEditing = !!assetId;
+
+  useEffect(() => {
+    if (assetId) {
+      const asset = manualAssets.find(a => a.id === assetId);
+      if (asset && asset.category === "Electronics") {
+        setValue("type", asset.details?.type.toLowerCase().replace(' ', ''));
+        setValue("brand", asset.details?.brand);
+        setValue("model", asset.details?.model);
+        setValue("serial-number", asset.details?.serialNumber);
+        setValue("purchase-date", asset.details?.purchaseDate);
+        setValue("purchase-price", asset.details?.purchasePrice);
+        setValue("value", asset.value);
+      }
+    }
+  }, [assetId, setValue]);
+
+  const onSubmit = (data:any) => {
+    console.log(data);
+  };
+
   return (
-    <AssetFormLayout title="Submit Electronics Asset">
-      <CardHeader>
-        <CardTitle>Electronics Details</CardTitle>
-        <CardDescription>
-          Please provide the details for your electronic device.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="type">Type</Label>
-          <Select defaultValue="laptop">
-            <SelectTrigger id="type">
-              <SelectValue placeholder="Select type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="laptop">Laptop</SelectItem>
-              <SelectItem value="mobile">Mobile Phone</SelectItem>
-              <SelectItem value="tablet">Tablet</SelectItem>
-              <SelectItem value="desktop">Desktop PC</SelectItem>
-              <SelectItem value="camera">Camera</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
+    <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardHeader>
+          <CardTitle>Electronics Details</CardTitle>
+          <CardDescription>
+            {isEditing ? "Update the details for your electronic device." : "Please provide the details for your electronic device."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="brand">Brand / Manufacturer</Label>
-            <Input id="brand" placeholder="e.g., Apple" />
+            <Label htmlFor="type">Type</Label>
+            <Select defaultValue="laptop" {...register("type")}>
+              <SelectTrigger id="type">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="laptop">Laptop</SelectItem>
+                <SelectItem value="mobile">Mobile Phone</SelectItem>
+                <SelectItem value="tablet">Tablet</SelectItem>
+                <SelectItem value="desktop">Desktop PC</SelectItem>
+                <SelectItem value="camera">Camera</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="model">Model</Label>
-            <Input id="model" placeholder="e.g., MacBook Pro 16&quot;" />
-          </div>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="serial-number">Serial Number</Label>
-          <Input id="serial-number" placeholder="Enter the device's serial number" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-                <Label htmlFor="purchase-date">Purchase Date</Label>
-                <Input id="purchase-date" type="date" />
+              <Label htmlFor="brand">Brand / Manufacturer</Label>
+              <Input id="brand" placeholder="e.g., Apple" {...register("brand")} />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="purchase-price">Purchase Price ($)</Label>
-                <Input id="purchase-price" type="number" placeholder="e.g., 2500" />
+              <Label htmlFor="model">Model</Label>
+              <Input id="model" placeholder="e.g., MacBook Pro 16&quot;" {...register("model")} />
             </div>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="value">Estimated Current Value ($)</Label>
-          <Input id="value" type="number" placeholder="e.g., 1800" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="documents">Supporting Documents</Label>
-          <Input id="documents" type="file" />
-          <p className="text-xs text-muted-foreground">
-            Upload purchase invoice, warranty card, or photos.
-          </p>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full sm:w-auto">Submit for Verification</Button>
-      </CardFooter>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="serial-number">Serial Number</Label>
+            <Input id="serial-number" placeholder="Enter the device's serial number" {...register("serial-number")} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                  <Label htmlFor="purchase-date">Purchase Date</Label>
+                  <Input id="purchase-date" type="date" {...register("purchase-date")} />
+              </div>
+              <div className="grid gap-2">
+                  <Label htmlFor="purchase-price">Purchase Price ($)</Label>
+                  <Input id="purchase-price" type="number" placeholder="e.g., 2500" {...register("purchase-price")} />
+              </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="value">Estimated Current Value ($)</Label>
+            <Input id="value" type="number" placeholder="e.g., 1800" required {...register("value")} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="documents">Supporting Documents</Label>
+            <Input id="documents" type="file" {...register("documents")} />
+            <p className="text-xs text-muted-foreground">
+              Upload purchase invoice, warranty card, or photos.
+            </p>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
+        </CardFooter>
+      </form>
     </AssetFormLayout>
   );
 }

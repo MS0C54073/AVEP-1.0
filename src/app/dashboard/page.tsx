@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -11,8 +12,10 @@ import {
   Settings,
   Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
 
 import {
   Sidebar,
@@ -42,7 +45,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
-import { accounts as allAccounts, transactions as allTransactions, user, manualAssets } from "@/lib/data";
+import { accounts as allAccounts, transactions as allTransactions, user, manualAssets as allManualAssets } from "@/lib/data";
 import { UserNav } from "@/components/dashboard/user-nav";
 import AiSummaryTool from "@/components/dashboard/ai-summary-tool";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -51,8 +54,16 @@ import { ManualAssetCard } from "@/components/dashboard/manual-asset-card";
 import { GlobalSearch } from "@/components/dashboard/global-search";
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'overview';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [searchQuery, setSearchQuery] = useState("");
+  const [manualAssets, setManualAssets] = useState(allManualAssets);
+
+
+  useEffect(() => {
+    setManualAssets(allManualAssets);
+  }, []);
 
   const totalAssets = allAccounts.reduce((sum, account) => sum + account.balance, 0);
 
@@ -61,21 +72,11 @@ export default function DashboardPage() {
   );
 
   const handleTabChange = (value: string) => {
-    if (value.startsWith('/')) {
-        // This is a navigation, not a tab change
-        return;
-    }
-    if (value.startsWith('#')) {
-      const tabName = value.substring(1);
-      setActiveTab(tabName);
-       // Scroll to the element
-      const element = document.getElementById(tabName);
+    setActiveTab(value);
+    const element = document.getElementById(value);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-    } else {
-      setActiveTab(value);
-    }
   }
 
   return (

@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   name: string;
@@ -26,11 +27,12 @@ export type Transaction = {
 export type ManualAsset = {
     id: string;
     userId: string;
-    category: "Vehicle" | "Electronics" | "Real Estate" | "Jewelry" | "Other";
+    category: "Vehicle" | "Electronics" | "Real Estate" | "Jewelry" | "Investments" | "Other";
     name: string;
     value: number;
     verificationStatus: "Pending" | "In Progress" | "Verified" | "Failed";
     verificationProgress: number;
+    details?: any;
 }
 
 export type Client = {
@@ -98,10 +100,12 @@ export const transactions: Transaction[] = [
     { id: "tx_8", accountId: "acc_4", date: "2024-07-19", description: "Software Subscription", amount: -250.00, category: "Business" },
 ];
 
-export const manualAssets: ManualAsset[] = [
-    { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100 },
-    { id: "mass_2", userId: "user_1", category: "Electronics", name: "MacBook Pro 16\"", value: 2500, verificationStatus: "In Progress", verificationProgress: 45 },
-    { id: "mass_3", userId: "user_1", category: "Real Estate", name: "Downtown Apartment", value: 350000, verificationStatus: "Pending", verificationProgress: 10 },
+export let manualAssets: ManualAsset[] = [
+    { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100, details: { make: "Honda", model: "Civic", year: 2022, vin: "1HGFB2F53MA000000", registrationNumber: "XYZ123" } },
+    { id: "mass_2", userId: "user_1", category: "Electronics", name: "MacBook Pro 16\"", value: 2500, verificationStatus: "In Progress", verificationProgress: 45, details: { type: "Laptop", brand: "Apple", model: "MacBook Pro 16" } },
+    { id: "mass_3", userId: "user_1", category: "Real Estate", name: "Downtown Apartment", value: 350000, verificationStatus: "Pending", verificationProgress: 10, details: { address: "123 Main St", city: "Anytown", country: "USA" } },
+    { id: "mass_4", userId: "user_1", category: "Jewelry", name: "Diamond Ring", value: 15000, verificationStatus: "Verified", verificationProgress: 100, details: { itemType: "Diamond Ring", description: "1.5 carat diamond ring, platinum band" } },
+    { id: "mass_5", userId: "user_1", category: "Investments", name: "Startup Inc. SAFE", value: 50000, verificationStatus: "In Progress", verificationProgress: 60, details: { investmentType: "SAFE", company: "Startup Inc." } },
 ];
 
 export const clients: Client[] = [
@@ -145,4 +149,8 @@ export const getAssetDataForAI = () => {
     });
 
     return content;
+}
+
+export const deleteManualAsset = (assetId: string) => {
+    manualAssets = manualAssets.filter(asset => asset.id !== assetId);
 }

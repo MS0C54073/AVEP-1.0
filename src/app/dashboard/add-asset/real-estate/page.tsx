@@ -1,3 +1,9 @@
+
+"use client";
+
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,65 +23,91 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { manualAssets } from '@/lib/data';
 
 export default function AddRealEstatePage() {
+  const searchParams = useSearchParams();
+  const assetId = searchParams.get('assetId');
+  const { register, handleSubmit, setValue, watch } = useForm();
+  const isEditing = !!assetId;
+
+  useEffect(() => {
+    if (assetId) {
+      const asset = manualAssets.find(a => a.id === assetId);
+      if (asset && asset.category === "Real Estate") {
+        setValue("property-type", asset.details?.propertyType);
+        setValue("address", asset.details?.address);
+        setValue("city", asset.details?.city);
+        setValue("country", asset.details?.country);
+        setValue("deed-number", asset.details?.deedNumber);
+        setValue("value", asset.value);
+      }
+    }
+  }, [assetId, setValue]);
+
+  const onSubmit = (data:any) => {
+    console.log(data);
+  };
+
   return (
-    <AssetFormLayout title="Submit Real Estate Asset">
-      <CardHeader>
-        <CardTitle>Property Details</CardTitle>
-        <CardDescription>
-          Please provide the details for your real estate property.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="property-type">Property Type</Label>
-          <Select defaultValue="residential">
-            <SelectTrigger id="property-type">
-              <SelectValue placeholder="Select type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="residential">Residential</SelectItem>
-              <SelectItem value="commercial">Commercial</SelectItem>
-              <SelectItem value="land">Land</SelectItem>
-              <SelectItem value="industrial">Industrial</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="address">Full Address</Label>
-          <Textarea id="address" placeholder="Enter the full property address" />
-        </div>
-         <div className="grid grid-cols-2 gap-4">
+    <AssetFormLayout title={isEditing ? "Edit Real Estate Asset" : "Submit Real Estate Asset"}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardHeader>
+          <CardTitle>Property Details</CardTitle>
+          <CardDescription>
+            {isEditing ? "Update the details for your real estate property." : "Please provide the details for your real estate property."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="city">City</Label>
-            <Input id="city" placeholder="e.g., New York" />
+            <Label htmlFor="property-type">Property Type</Label>
+            <Select defaultValue="residential" {...register("property-type")}>
+              <SelectTrigger id="property-type">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="residential">Residential</SelectItem>
+                <SelectItem value="commercial">Commercial</SelectItem>
+                <SelectItem value="land">Land</SelectItem>
+                <SelectItem value="industrial">Industrial</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="country">Country</Label>
-            <Input id="country" placeholder="e.g., USA" />
+            <Label htmlFor="address">Full Address</Label>
+            <Textarea id="address" placeholder="Enter the full property address" {...register("address")} />
           </div>
-        </div>
-        <div className="grid gap-2">
-            <Label htmlFor="deed-number">Deed / Title Number</Label>
-            <Input id="deed-number" placeholder="Enter the official title or deed number" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="value">Estimated Market Value ($)</Label>
-          <Input id="value" type="number" placeholder="e.g., 750000" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="documents">Supporting Documents</Label>
-          <Input id="documents" type="file" multiple />
-          <p className="text-xs text-muted-foreground">
-            Upload deed copy, property tax bill, or other ownership documents.
-          </p>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full sm:w-auto">Submit for Verification</Button>
-      </CardFooter>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="city">City</Label>
+              <Input id="city" placeholder="e.g., New York" {...register("city")} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="country">Country</Label>
+              <Input id="country" placeholder="e.g., USA" {...register("country")} />
+            </div>
+          </div>
+          <div className="grid gap-2">
+              <Label htmlFor="deed-number">Deed / Title Number</Label>
+              <Input id="deed-number" placeholder="Enter the official title or deed number" {...register("deed-number")} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="value">Estimated Market Value ($)</Label>
+            <Input id="value" type="number" placeholder="e.g., 750000" required {...register("value")} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="documents">Supporting Documents</Label>
+            <Input id="documents" type="file" multiple {...register("documents")} />
+            <p className="text-xs text-muted-foreground">
+              Upload deed copy, property tax bill, or other ownership documents.
+            </p>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
+        </CardFooter>
+      </form>
     </AssetFormLayout>
   );
 }
