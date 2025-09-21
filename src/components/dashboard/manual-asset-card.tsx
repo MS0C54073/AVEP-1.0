@@ -14,6 +14,7 @@ import { DeleteAssetDialog } from "./delete-asset-dialog";
 
 type ManualAssetCardProps = {
   asset: ManualAsset;
+  onDelete: (assetId: string) => void;
 };
 
 const categoryIcons = {
@@ -42,7 +43,7 @@ const categoryRoutes = {
 }
 
 
-export function ManualAssetCard({ asset }: ManualAssetCardProps) {
+export function ManualAssetCard({ asset, onDelete }: ManualAssetCardProps) {
     const router = useRouter();
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -53,8 +54,8 @@ export function ManualAssetCard({ asset }: ManualAssetCardProps) {
         }
     }
 
-    const handleDelete = () => {
-        console.log(`Deleting asset ${asset.id}`);
+    const handleDeleteConfirm = () => {
+        onDelete(asset.id);
         setDeleteDialogOpen(false);
     }
 
@@ -104,7 +105,7 @@ export function ManualAssetCard({ asset }: ManualAssetCardProps) {
         <DeleteAssetDialog
             isOpen={isDeleteDialogOpen}
             onClose={() => setDeleteDialogOpen(false)}
-            onConfirm={handleDelete}
+            onConfirm={handleDeleteConfirm}
             assetName={asset.name}
         />
     </>

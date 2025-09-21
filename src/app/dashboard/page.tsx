@@ -45,7 +45,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
-import { accounts as allAccounts, transactions as allTransactions, user, manualAssets as allManualAssets } from "@/lib/data";
+import { accounts as allAccounts, transactions as allTransactions, user, manualAssets as allManualAssets, deleteManualAsset } from "@/lib/data";
 import { UserNav } from "@/components/dashboard/user-nav";
 import AiSummaryTool from "@/components/dashboard/ai-summary-tool";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -62,8 +62,17 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
+    // This effect can be used to refresh data from a source if needed.
+    // For now, it just ensures we have the latest from the in-memory store
+    // if the page were to re-render for other reasons.
     setManualAssets(allManualAssets);
   }, []);
+
+  const handleDeleteAsset = (assetId: string) => {
+    deleteManualAsset(assetId);
+    setManualAssets(currentAssets => currentAssets.filter(asset => asset.id !== assetId));
+  };
+
 
   const totalAssets = allAccounts.reduce((sum, account) => sum + account.balance, 0);
   const totalManualAssetsValue = manualAssets.reduce((sum, asset) => sum + asset.value, 0);
@@ -234,7 +243,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {manualAssets.map(asset => (
-                        <ManualAssetCard key={asset.id} asset={asset} />
+                        <ManualAssetCard key={asset.id} asset={asset} onDelete={handleDeleteAsset} />
                     ))}
                 </CardContent>
               </Card>
