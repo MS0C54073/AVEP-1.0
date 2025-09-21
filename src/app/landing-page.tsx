@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Landmark, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 
@@ -40,14 +41,13 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-4">
+                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Trusted & Secure</div>
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Reliable Asset Verification, Simplified
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                    AVEP provides trusted, real-time financial asset
-                    verification for individuals and organizations. Secure,
-                    compliant, and fast.
+                    AVEP provides a secure and compliant platform for real-time financial and physical asset verification, giving you a clear financial picture, instantly.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -64,24 +64,33 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                 <ShieldCheck className="h-48 w-48 text-primary/10" strokeWidth={0.5} />
+                 <Image 
+                    src="https://picsum.photos/seed/secure-data/600/400"
+                    width={600}
+                    height={400}
+                    alt="Abstract security illustration"
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="data security"
+                 />
               </div>
             </div>
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} AVEP. All rights reserved.
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4">
-            Terms of Service
-          </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4">
-            Privacy
-          </Link>
-        </nav>
+      <footer className="border-t">
+        <div className="container flex flex-col gap-2 sm:flex-row py-6 items-center px-4 md:px-6">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+            &copy; {new Date().getFullYear()} AVEP. All rights reserved.
+            </p>
+            <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+            <Link href="#" className="text-xs hover:underline underline-offset-4">
+                Terms of Service
+            </Link>
+            <Link href="#" className="text-xs hover:underline underline-offset-4">
+                Privacy
+            </Link>
+            </nav>
+        </div>
       </footer>
     </div>
   );
