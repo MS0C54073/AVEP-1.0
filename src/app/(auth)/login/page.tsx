@@ -15,20 +15,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { user } from "@/lib/data";
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      email: user.email,
+      password: "password123",
+    }
+  });
 
-  const handleLogin = () => {
-    // In a real app, you'd have authentication logic here.
-    // For now, we'll just show a success toast and redirect.
-    toast({
-        title: "Login Successful",
-        description: "Welcome back!",
-    });
-    router.push("/dashboard/home");
+  const handleLogin = (data: any) => {
+    // In a real app, you'd have more secure authentication.
+    // For now, we check against hardcoded data.
+    if (data.email === user.email && data.password === "password123") {
+      toast({
+          title: "Login Successful",
+          description: "Welcome back!",
+      });
+      router.push("/dashboard/home");
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: "Invalid email or password. Please try again.",
+      });
+    }
   };
 
   return (
@@ -36,7 +50,7 @@ export default function LoginPage() {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your email and password to access your account.
         </CardDescription>
       </CardHeader>
       <CardContent>
