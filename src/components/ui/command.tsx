@@ -2,12 +2,11 @@
 
 import * as React from "react"
 import { type DialogProps } from "@radix-ui/react-dialog"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Command as CommandPrimitive } from "cmdk"
 import { Search } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -26,12 +25,38 @@ Command.displayName = CommandPrimitive.displayName
 
 interface CommandDialogProps extends DialogProps {}
 
+const VisuallyHidden = React.forwardRef<
+  HTMLElement,
+  React.HTMLAttributes<HTMLElement>
+>((props, ref) => {
+  return (
+    <span
+      {...props}
+      ref={ref as any}
+      style={{
+        position: 'absolute',
+        border: 0,
+        width: 1,
+        height: 1,
+        padding: 0,
+        margin: -1,
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        wordWrap: 'normal',
+      }}
+    />
+  );
+});
+VisuallyHidden.displayName = 'VisuallyHidden';
+
+
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent className="overflow-hidden p-0 shadow-lg">
         <VisuallyHidden>
-            <DialogTitle>Global Search</DialogTitle>
+          <DialogTitle>Global Search</DialogTitle>
         </VisuallyHidden>
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
