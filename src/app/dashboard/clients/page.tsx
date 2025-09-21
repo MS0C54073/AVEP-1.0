@@ -67,12 +67,12 @@ export default function ClientsPage() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader className="p-4">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Landmark className="text-primary size-8" />
             <h1 className="text-2xl font-semibold text-sidebar-foreground">
               AVEP
             </h1>
-          </div>
+          </Link>
         </SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
