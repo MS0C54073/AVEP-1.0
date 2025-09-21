@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,12 +14,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 export default function RegisterOrganizationPage() {
   const router = useRouter();
+  const { toast } = useToast();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRegister = () => {
+     toast({
+        title: "Registration Successful",
+        description: "Your organization's account has been created.",
+    });
     router.push("/dashboard/home");
   };
 
@@ -33,18 +41,20 @@ export default function RegisterOrganizationPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleRegister} className="grid gap-4">
+        <form onSubmit={handleSubmit(handleRegister)} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="organization-name">Organization Name</Label>
-            <Input id="organization-name" placeholder="Acme Inc." required />
+            <Input id="organization-name" placeholder="Acme Inc." {...register("organizationName", { required: "Organization name is required" })} />
+            {errors.organizationName && <p className="text-sm text-destructive">{errors.organizationName.message as string}</p>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="tax-id">Tax ID</Label>
             <Input
               id="tax-id"
               placeholder="Your organization's tax identifier"
-              required
+              {...register("taxId", { required: "Tax ID is required" })}
             />
+            {errors.taxId && <p className="text-sm text-destructive">{errors.taxId.message as string}</p>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Your Email</Label>
@@ -52,12 +62,14 @@ export default function RegisterOrganizationPage() {
               id="email"
               type="email"
               placeholder="m@example.com"
-              required
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message as string}</p>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
+            <Input id="password" type="password" {...register("password", { required: "Password is required", minLength: { value: 6, message: "Password must be at least 6 characters" } })}/>
+            {errors.password && <p className="text-sm text-destructive">{errors.password.message as string}</p>}
           </div>
           <Button type="submit" className="w-full">
             Create Account
