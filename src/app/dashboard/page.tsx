@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   BotMessageSquare,
@@ -8,6 +10,8 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
 
 import {
   Sidebar,
@@ -46,6 +50,7 @@ import { AddAssetDialog } from "@/components/dashboard/add-asset-dialog";
 import { ManualAssetCard } from "@/components/dashboard/manual-asset-card";
 
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState("overview");
   const totalAssets = accounts.reduce((sum, account) => sum + account.balance, 0);
 
   return (
@@ -61,27 +66,29 @@ export default function DashboardPage() {
         </SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton href="#" isActive>
+            <SidebarMenuButton onClick={() => setActiveTab("overview")} isActive={activeTab === 'overview'}>
               <LayoutDashboard />
               Dashboard
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton href="#">
+            <SidebarMenuButton onClick={() => setActiveTab("transactions")} isActive={activeTab === 'transactions'}>
               <ReceiptText />
               Transactions
             </SidebarMenuButton>
           </SidebarMenuItem>
            <SidebarMenuItem>
-            <SidebarMenuButton href="#">
+            <SidebarMenuButton onClick={() => setActiveTab("ai-summary")} isActive={activeTab === 'ai-summary'}>
               <BotMessageSquare />
               AI Summary
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton href="#">
-              <Users />
-              Clients
+            <SidebarMenuButton asChild>
+                <Link href="/dashboard/clients">
+                    <Users />
+                    Clients
+                </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -120,7 +127,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <Tabs defaultValue="overview">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="transactions">Transactions</TabsTrigger>
@@ -279,3 +286,5 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+    
