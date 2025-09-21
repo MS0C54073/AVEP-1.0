@@ -66,6 +66,7 @@ export default function DashboardPage() {
   }, []);
 
   const totalAssets = allAccounts.reduce((sum, account) => sum + account.balance, 0);
+  const totalManualAssetsValue = manualAssets.reduce((sum, asset) => sum + asset.value, 0);
 
   const filteredTransactions = allTransactions.filter(tx =>
     tx.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -159,7 +160,7 @@ export default function DashboardPage() {
               <TabsTrigger value="ai-summary">AI Summary</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -173,6 +174,22 @@ export default function DashboardPage() {
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Across {allAccounts.length} linked accounts
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Manually Submitted Assets
+                    </CardTitle>
+                    <FileBox className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      ${totalManualAssetsValue.toLocaleString()}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Across {manualAssets.length} manual assets
                     </p>
                   </CardContent>
                 </Card>
