@@ -1,62 +1,81 @@
-import { Button } from "@/components/ui/button"
+"use client";
+
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function RegisterOrganizationPage() {
+  const router = useRouter();
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push("/dashboard");
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Create an Organization Account</CardTitle>
+        <CardTitle className="text-2xl">
+          Create an Organization Account
+        </CardTitle>
         <CardDescription>
-          Welcome! Please provide your organization's details below to create a new account.
+          Welcome! Please provide your organization&apos;s details below to
+          create a new account.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
+      <CardContent>
+        <form onSubmit={handleRegister} className="grid gap-4">
+          <div className="grid gap-2">
             <Label htmlFor="organization-name">Organization Name</Label>
             <Input id="organization-name" placeholder="Acme Inc." required />
-        </div>
-         <div className="grid gap-2">
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="tax-id">Tax ID</Label>
-            <Input id="tax-id" placeholder="Your organization's tax identifier" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="email">Your Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" />
-        </div>
-        <Button type="submit" className="w-full">
-          Create Account
-        </Button>
-         <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link href="/login" className="underline">
-            Login
-          </Link>
-        </div>
-         <div className="text-center text-sm">
-          Registering as an individual?{' '}
-          <Link href="/register/individual" className="underline">
-            Click here
-          </Link>
-        </div>
+            <Input
+              id="tax-id"
+              placeholder="Your organization's tax identifier"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="email">Your Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" />
+          </div>
+          <Button type="submit" className="w-full">
+            Create Account
+          </Button>
+          <div className="mt-4 text-center text-sm">
+            Already have an account?{" "}
+            <Link href="/login" className="underline">
+              Login
+            </Link>
+          </div>
+          <div className="text-center text-sm">
+            Registering as an individual?{" "}
+            <Link href="/register/individual" className="underline">
+              Click here
+            </Link>
+          </div>
+        </form>
       </CardContent>
     </Card>
-  )
+  );
 }
