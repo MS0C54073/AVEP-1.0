@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +15,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useToast } from "@/hooks/use-toast";
 
 type UserNavProps = {
   user: User;
 };
 
 export function UserNav({ user }: UserNavProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const getInitials = (name: string) => {
     const names = name.split(" ");
     return names
@@ -28,6 +34,21 @@ export function UserNav({ user }: UserNavProps) {
   };
   
   const avatarUrl = PlaceHolderImages.find(p => p.id === 'user-avatar')?.imageUrl ?? "https://picsum.photos/seed/1/100/100";
+
+  const handleFeatureNotImplemented = (feature: string) => {
+    toast({
+      title: "Coming Soon",
+      description: `${feature} functionality is not yet implemented.`,
+    });
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+    router.push('/login');
+  };
 
   return (
     <DropdownMenu>
@@ -50,12 +71,12 @@ export function UserNav({ user }: UserNavProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Profile')}>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Billing')}>Billing</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Settings')}>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
