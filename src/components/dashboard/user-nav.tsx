@@ -2,6 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,13 +36,6 @@ export function UserNav({ user }: UserNavProps) {
   
   const avatarUrl = PlaceHolderImages.find(p => p.id === 'user-avatar')?.imageUrl ?? "https://picsum.photos/seed/1/100/100";
 
-  const handleFeatureNotImplemented = (feature: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${feature} functionality is not yet implemented.`,
-    });
-  };
-
   const handleLogout = () => {
     toast({
       title: "Logged Out",
@@ -71,9 +65,15 @@ export function UserNav({ user }: UserNavProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Profile')}>Profile</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Billing')}>Billing</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFeatureNotImplemented('Settings')}>Settings</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/profile">Profile</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/billing">Billing</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/settings">Settings</Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>

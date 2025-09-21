@@ -84,6 +84,10 @@ export default function DashboardPage() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set('tab', value);
+    window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+
     const element = document.getElementById(value);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -148,9 +152,11 @@ export default function DashboardPage() {
         <SidebarFooter className="mt-auto">
            <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="#">
-                <Settings />
-                Settings
+              <SidebarMenuButton asChild>
+                <Link href="/dashboard/settings">
+                    <Settings />
+                    Settings
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -177,7 +183,7 @@ export default function DashboardPage() {
               <TabsTrigger value="transactions">Transactions</TabsTrigger>
               <TabsTrigger value="ai-summary">AI Summary</TabsTrigger>
             </TabsList>
-            <TabsContent value="overview" className="space-y-4">
+            <TabsContent value="overview" className="space-y-4" id="overview">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -294,7 +300,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="transactions">
+            <TabsContent value="transactions" id="transactions">
               <Card>
                 <CardHeader>
                   <CardTitle>Transaction History</CardTitle>
@@ -337,7 +343,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="ai-summary">
+            <TabsContent value="ai-summary" id="ai-summary">
               <AiSummaryTool />
             </TabsContent>
           </Tabs>
