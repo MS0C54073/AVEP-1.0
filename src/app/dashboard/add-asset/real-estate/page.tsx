@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
+import { Separator } from '@/components/ui/separator';
 
 export default function AddRealEstatePage() {
   const router = useRouter();
@@ -42,6 +43,7 @@ export default function AddRealEstatePage() {
         setValue("country", asset.details?.country);
         setValue("deed-number", asset.details?.deedNumber);
         setValue("value", asset.value);
+        setValue("police-station", asset.details?.policeStation);
       }
     }
   }, [assetId, setValue]);
@@ -57,6 +59,7 @@ export default function AddRealEstatePage() {
             city: data.city,
             country: data.country,
             deedNumber: data['deed-number'],
+            policeStation: data['police-station'],
         }
     };
       
@@ -115,6 +118,37 @@ export default function AddRealEstatePage() {
             <Label htmlFor="value">Estimated Market Value ($)</Label>
             <Input id="value" type="number" placeholder="e.g., 750000" required {...register("value")} />
           </div>
+
+          <Separator />
+          
+          <div className="grid gap-4">
+              <h3 className="text-lg font-medium">Police Clearance</h3>
+              <div className="grid gap-2">
+                  <Label htmlFor="police-station">Cleared From Police Station</Label>
+                   <Select onValueChange={(value) => setValue('police-station', value)} defaultValue={watch('police-station')}>
+                      <SelectTrigger id="police-station">
+                          <SelectValue placeholder="Select police station" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="central">Central Police Station</SelectItem>
+                          <SelectItem value="emmasdale">Emmasdale Police Station</SelectItem>
+                          <SelectItem value="kabwata">Kabwata Police Station</SelectItem>
+                          <SelectItem value="woodlands">Woodlands Police Station</SelectItem>
+                          <SelectItem value="chelstone">Chelstone Police Station</SelectItem>
+                      </SelectContent>
+                  </Select>
+              </div>
+              <div className="grid gap-2">
+                  <Label htmlFor="police-clearance-form">Police Clearance Form</Label>
+                  <Input id="police-clearance-form" type="file" {...register("police-clearance-form")} />
+                  <p className="text-xs text-muted-foreground">
+                      Upload the scanned copy of the police clearance form.
+                  </p>
+              </div>
+          </div>
+
+          <Separator />
+
           <div className="grid gap-2">
             <Label htmlFor="documents">Supporting Documents</Label>
             <Input id="documents" type="file" multiple {...register("documents")} />
