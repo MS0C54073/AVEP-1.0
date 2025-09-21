@@ -54,7 +54,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2">
             <Landmark className="text-primary size-8" />
             <h1 className="text-2xl font-semibold text-sidebar-foreground">
-              VeriSource
+              AVEP
             </h1>
           </div>
         </SidebarHeader>

@@ -12,7 +12,7 @@ export default function AuthLayout({
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2 text-foreground">
             <Landmark className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-semibold">VeriSource</span>
+            <span className="text-2xl font-semibold">AVEP</span>
           </Link>
         </div>
         {children}

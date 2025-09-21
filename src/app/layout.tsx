@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'VeriSource',
-  description: 'Asset Verification System by VeriSource',
+  title: 'AVEP',
+  description: 'Asset Verification Platform',
 };
 
 export default function RootLayout({
