@@ -14,9 +14,9 @@ export default function RegisterIndividualPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Create an individual account</CardTitle>
+        <CardTitle className="text-2xl">Create an Individual Account</CardTitle>
         <CardDescription>
-          Enter your information to create an account
+          Welcome! To get started, please enter your information below to create your secure account.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -48,13 +48,13 @@ export default function RegisterIndividualPage() {
         </Button>
          <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
-          <Link href="/auth/login" className="underline">
+          <Link href="/login" className="underline">
             Login
           </Link>
         </div>
         <div className="text-center text-sm">
           Registering as an organization?{' '}
-          <Link href="/auth/register/organization" className="underline">
+          <Link href="/register/organization" className="underline">
             Click here
           </Link>
         </div>

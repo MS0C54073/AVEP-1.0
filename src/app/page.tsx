@@ -31,7 +31,7 @@ export default function LandingPage() {
             Contact
           </Link>
           <Button variant="outline" asChild>
-            <Link href="/auth/login">Login</Link>
+            <Link href="/login">Login</Link>
           </Button>
         </nav>
       </header>
@@ -52,12 +52,12 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button size="lg" asChild>
-                    <Link href="/auth/register/individual">
+                    <Link href="/register/individual">
                       Get Started as an Individual
                     </Link>
                   </Button>
                   <Button size="lg" variant="secondary" asChild>
-                    <Link href="/auth/register/organization">
+                    <Link href="/register/organization">
                       For Organizations
                     </Link>
                   </Button>
