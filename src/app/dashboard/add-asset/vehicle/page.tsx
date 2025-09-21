@@ -41,6 +41,7 @@ export default function AddVehiclePage() {
         setValue("year", asset.details?.year);
         setValue("vin", asset.details?.vin);
         setValue("registration-number", asset.details?.registrationNumber);
+        setValue("white-book-details", asset.details?.whiteBookDetails);
         setValue("value", asset.value);
       }
     }
@@ -59,6 +60,7 @@ export default function AddVehiclePage() {
                 year: data.year,
                 vin: data.vin,
                 registrationNumber: data['registration-number'],
+                whiteBookDetails: data['white-book-details'],
             }
         });
         router.push('/dashboard');
@@ -112,19 +114,32 @@ export default function AddVehiclePage() {
               <Input id="vin" placeholder="Enter VIN" {...register("vin")} />
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="registration-number">Registration Number</Label>
-            <Input id="registration-number" placeholder="Enter registration number" {...register("registration-number")} />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+                <Label htmlFor="registration-number">Registration Number</Label>
+                <Input id="registration-number" placeholder="Enter registration number" {...register("registration-number")} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="white-book-details">White Book Details</Label>
+                <Input id="white-book-details" placeholder="Enter white book details" {...register("white-book-details")} />
+            </div>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="value">Estimated Value ($)</Label>
             <Input id="value" type="number" placeholder="e.g., 22000" required {...register("value")} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="documents">Supporting Documents</Label>
-            <Input id="documents" type="file" multiple {...register("documents")} />
+            <Label htmlFor="documents">White Book / Registration Document</Label>
+            <Input id="documents" type="file" {...register("white-book-document")} />
             <p className="text-xs text-muted-foreground">
-              Upload registration, proof of ownership, or insurance documents.
+              Upload the vehicle's official registration document (white book).
+            </p>
+          </div>
+           <div className="grid gap-2">
+            <Label htmlFor="other-documents">Other Supporting Documents</Label>
+            <Input id="other-documents" type="file" multiple {...register("documents")} />
+            <p className="text-xs text-muted-foreground">
+              Upload proof of ownership or insurance documents.
             </p>
           </div>
         </CardContent>

@@ -101,7 +101,7 @@ export const transactions: Transaction[] = [
 ];
 
 export let manualAssets: ManualAsset[] = [
-    { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100, details: { make: "Honda", model: "Civic", year: 2022, vin: "1HGFB2F53MA000000", registrationNumber: "XYZ123" } },
+    { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100, details: { make: "Honda", model: "Civic", year: 2022, vin: "1HGFB2F53MA000000", registrationNumber: "XYZ123", whiteBookDetails: "Some details" } },
     { id: "mass_2", userId: "user_1", category: "Electronics", name: "MacBook Pro 16\"", value: 2500, verificationStatus: "In Progress", verificationProgress: 45, details: { type: "Laptop", brand: "Apple", model: "MacBook Pro 16" } },
     { id: "mass_3", userId: "user_1", category: "Real Estate", name: "Downtown Apartment", value: 350000, verificationStatus: "Pending", verificationProgress: 10, details: { address: "123 Main St", city: "Anytown", country: "USA" } },
     { id: "mass_4", userId: "user_1", category: "Jewelry", name: "Diamond Ring", value: 15000, verificationStatus: "Verified", verificationProgress: 100, details: { itemType: "Diamond Ring", description: "1.5 carat diamond ring, platinum band" } },
