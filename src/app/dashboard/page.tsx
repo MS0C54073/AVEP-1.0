@@ -37,12 +37,13 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
-import { accounts, transactions, user } from "@/lib/data";
+import { accounts, transactions, user, manualAssets } from "@/lib/data";
 import { UserNav } from "@/components/dashboard/user-nav";
 import AiSummaryTool from "@/components/dashboard/ai-summary-tool";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { AddAssetDialog } from "@/components/dashboard/add-asset-dialog";
+import { ManualAssetCard } from "@/components/dashboard/manual-asset-card";
 
 export default function DashboardPage() {
   const totalAssets = accounts.reduce((sum, account) => sum + account.balance, 0);
@@ -114,6 +115,9 @@ export default function DashboardPage() {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <div className="flex items-center">
             <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
+            <div className="ml-auto">
+                <AddAssetDialog />
+            </div>
           </div>
 
           <Tabs defaultValue="overview">
@@ -127,7 +131,7 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Assets
+                      Total Financial Assets
                     </CardTitle>
                     <Landmark className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
@@ -171,9 +175,24 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               </div>
+
+               <Card>
+                <CardHeader>
+                  <CardTitle>Manually Submitted Assets</CardTitle>
+                  <CardDescription>
+                    Assets you have submitted for verification.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {manualAssets.map(asset => (
+                        <ManualAssetCard key={asset.id} asset={asset} />
+                    ))}
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader>
-                  <CardTitle>Linked Accounts</CardTitle>
+                  <CardTitle>Linked Financial Accounts</CardTitle>
                   <CardDescription>
                     Overview of all linked financial accounts.
                   </CardDescription>

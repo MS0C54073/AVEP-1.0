@@ -23,6 +23,16 @@ export type Transaction = {
   category: string;
 };
 
+export type ManualAsset = {
+    id: string;
+    userId: string;
+    category: "Vehicle" | "Electronics" | "Real Estate" | "Jewelry" | "Other";
+    name: string;
+    value: number;
+    verificationStatus: "Pending" | "In Progress" | "Verified" | "Failed";
+    verificationProgress: number;
+}
+
 export const user: User = {
   id: "user_1",
   name: "Alex Doe",
@@ -78,6 +88,13 @@ export const transactions: Transaction[] = [
     { id: "tx_7", accountId: "acc_1", date: "2024-07-20", description: "Restaurant", amount: -75.00, category: "Food" },
     { id: "tx_8", accountId: "acc_4", date: "2024-07-19", description: "Software Subscription", amount: -250.00, category: "Business" },
 ];
+
+export const manualAssets: ManualAsset[] = [
+    { id: "mass_1", userId: "user_1", category: "Vehicle", name: "Honda Civic 2022", value: 22000, verificationStatus: "Verified", verificationProgress: 100 },
+    { id: "mass_2", userId: "user_1", category: "Electronics", name: "MacBook Pro 16\"", value: 2500, verificationStatus: "In Progress", verificationProgress: 45 },
+    { id: "mass_3", userId: "user_1", category: "Real Estate", name: "Downtown Apartment", value: 350000, verificationStatus: "Pending", verificationProgress: 10 },
+];
+
 
 export const getAssetDataForAI = () => {
     let content = `User: ${user.name}, Email: ${user.email}\n\n`;
