@@ -1,6 +1,4 @@
 
-"use client";
-
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -29,6 +27,8 @@ import { useEffect } from 'react';
 
 
 function RealEstateForm() {
+  "use client";
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -170,7 +170,7 @@ function RealEstateForm() {
 
 export default function AddRealEstatePage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading form...</div>}>
             <RealEstateForm />
         </Suspense>
     )

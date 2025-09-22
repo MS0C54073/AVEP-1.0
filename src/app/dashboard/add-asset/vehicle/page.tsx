@@ -1,6 +1,4 @@
 
-"use client";
-
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -26,8 +24,9 @@ import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import { useEffect } from 'react';
 
-
 function VehicleForm() {
+  "use client";
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -191,7 +190,7 @@ function VehicleForm() {
 
 export default function AddVehiclePage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading form...</div>}>
             <VehicleForm />
         </Suspense>
     )

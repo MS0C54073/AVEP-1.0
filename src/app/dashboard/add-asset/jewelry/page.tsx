@@ -1,6 +1,4 @@
 
-"use client";
-
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -23,6 +21,8 @@ import { useEffect } from 'react';
 
 
 function JewelryForm() {
+  "use client";
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -132,7 +132,7 @@ function JewelryForm() {
 
 export default function AddJewelryPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading form...</div>}>
             <JewelryForm />
         </Suspense>
     )
