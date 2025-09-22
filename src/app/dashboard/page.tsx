@@ -12,6 +12,7 @@ import {
   Search,
   Settings,
   Users,
+  Bell
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -53,6 +54,8 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AddAssetDialog } from "@/components/dashboard/add-asset-dialog";
 import { ManualAssetCard } from "@/components/dashboard/manual-asset-card";
 import { GlobalSearch } from "@/components/dashboard/global-search";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
+
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -148,6 +151,14 @@ export default function DashboardPage() {
                 </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/notifications">
+                <Bell />
+                Notifications
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
         <SidebarFooter className="mt-auto">
            <SidebarMenu>
@@ -167,6 +178,7 @@ export default function DashboardPage() {
           <div className="w-full flex-1">
             <GlobalSearch />
           </div>
+          <NotificationBell />
           <UserNav user={user} />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

@@ -44,6 +44,14 @@ export type Client = {
     avatar: string;
 }
 
+export type Notification = {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    read: boolean;
+};
+
 export const user: User = {
   id: "user_1",
   name: "Alex Doe",
@@ -135,6 +143,36 @@ export const clients: Client[] = [
     }
 ];
 
+export const notifications: Notification[] = [
+    {
+        id: "notif_1",
+        title: "New Asset Verified",
+        description: "Your 'Honda Civic 2022' has been successfully verified.",
+        date: "2024-07-28",
+        read: false,
+    },
+    {
+        id: "notif_2",
+        title: "Client Added",
+        description: "You have been assigned a new client: Innovate Inc.",
+        date: "2024-07-27",
+        read: false,
+    },
+    {
+        id: "notif_3",
+        title: "Action Required",
+        description: "Your 'MacBook Pro 16\"' asset requires additional documentation.",
+        date: "2024-07-26",
+        read: false,
+    },
+    {
+        id: "notif_4",
+        title: "Subscription Renewal",
+        description: "Your Pro plan will renew on August 1, 2024.",
+        date: "2024-07-25",
+        read: true,
+    }
+];
 
 export const getAssetDataForAI = () => {
     let content = `User: ${user.name}, Email: ${user.email}\n\n`;
@@ -169,6 +207,6 @@ export const deleteManualAsset = (assetId: string) => {
 
 export const updateManualAsset = (assetId: string, updatedAsset: Partial<ManualAsset>) => {
     manualAssets = manualAssets.map(asset => 
-        asset.id === assetId ? { ...asset, ...updatedAsset, details: {...asset.details, ...updatedAsset.details} } : asset
+        asset.id === assetId ? { ...asset, ...asset.details, ...updatedAsset.details, ...updatedAsset } : asset
     );
 };

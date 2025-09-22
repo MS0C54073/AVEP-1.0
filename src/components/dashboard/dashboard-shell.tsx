@@ -7,7 +7,8 @@ import {
   Users,
   BotMessageSquare,
   FileBox,
-  Home
+  Home,
+  Bell
 } from "lucide-react";
 import Link from "next/link";
 
@@ -24,6 +25,8 @@ import {
 import { user } from "@/lib/data";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { GlobalSearch } from "@/components/dashboard/global-search";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
+
 
 type DashboardShellProps = {
   title: string;
@@ -88,6 +91,14 @@ export function DashboardShell({ title, description, children }: DashboardShellP
                 </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/notifications">
+                <Bell />
+                Notifications
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
         <SidebarFooter className="mt-auto">
            <SidebarMenu>
@@ -107,6 +118,7 @@ export function DashboardShell({ title, description, children }: DashboardShellP
           <div className="w-full flex-1">
             <GlobalSearch />
           </div>
+          <NotificationBell />
           <UserNav user={user} />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
