@@ -26,11 +26,11 @@ function InvestmentsForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
-  const { register, handleSubmit, setValue, watch } = useForm();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
   const isEditing = !!assetId;
 
   useEffect(() => {
-    if (assetId) {
+    if (isEditing) {
       const asset = manualAssets.find(a => a.id === assetId);
       if (asset && asset.category === "Investments") {
         setValue("investment-name", asset.name);
@@ -41,7 +41,7 @@ function InvestmentsForm() {
         setValue("police-station", asset.details?.policeStation);
       }
     }
-  }, [assetId, setValue]);
+  }, [assetId, isEditing, setValue]);
 
   const onSubmit = (data:any) => {
     const assetData = { 
@@ -65,6 +65,7 @@ function InvestmentsForm() {
   };
 
   return (
+    <AssetFormLayout title={isEditing ? "Edit Non-Bank Investment" : "Submit Non-Bank Investment"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Investment Details</CardTitle>
@@ -87,7 +88,8 @@ function InvestmentsForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="value">Estimated Current Value ($)</Label>
-            <Input id="value" type="number" placeholder="e.g., 50000" required {...register("value")} />
+            <Input id="value" type="number" placeholder="e.g., 50000" {...register("value", { required: "Value is required" })} />
+            {errors.value && <p className="text-sm text-destructive">{errors.value.message as string}</p>}
           </div>
           <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
@@ -136,19 +138,14 @@ function InvestmentsForm() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
+    </AssetFormLayout>
   );
 }
 
 export default function AddInvestmentsPage() {
-    const searchParams = useSearchParams();
-    const assetId = searchParams.get('assetId');
-    const isEditing = !!assetId;
-
     return (
-        <AssetFormLayout title={isEditing ? "Edit Non-Bank Investment" : "Submit Non-Bank Investment"}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <InvestmentsForm />
-            </Suspense>
-        </AssetFormLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+            <InvestmentsForm />
+        </Suspense>
     )
 }

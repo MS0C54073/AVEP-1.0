@@ -30,24 +30,24 @@ function ElectronicsForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const assetId = searchParams.get('assetId');
-    const { register, handleSubmit, setValue, watch } = useForm();
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
     const isEditing = !!assetId;
 
     useEffect(() => {
-        if (assetId) {
-        const asset = manualAssets.find(a => a.id === assetId);
-        if (asset && asset.category === "Electronics") {
-            setValue("type", asset.details?.type.toLowerCase().replace(' ', ''));
-            setValue("brand", asset.details?.brand);
-            setValue("model", asset.details?.model);
-            setValue("serial-number", asset.details?.serialNumber);
-            setValue("purchase-date", asset.details?.purchaseDate);
-            setValue("purchase-price", asset.details?.purchasePrice);
-            setValue("value", asset.value);
-            setValue("police-station", asset.details?.policeStation);
+        if (isEditing) {
+            const asset = manualAssets.find(a => a.id === assetId);
+            if (asset && asset.category === "Electronics") {
+                setValue("type", asset.details?.type.toLowerCase().replace(' ', ''));
+                setValue("brand", asset.details?.brand);
+                setValue("model", asset.details?.model);
+                setValue("serial-number", asset.details?.serialNumber);
+                setValue("purchase-date", asset.details?.purchaseDate);
+                setValue("purchase-price", asset.details?.purchasePrice);
+                setValue("value", asset.value);
+                setValue("police-station", asset.details?.policeStation);
+            }
         }
-        }
-    }, [assetId, setValue]);
+    }, [assetId, isEditing, setValue]);
 
     const onSubmit = (data:any) => {
         const name = `${data.brand} ${data.model}`;
@@ -74,6 +74,7 @@ function ElectronicsForm() {
     };
 
   return (
+    <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Electronics Details</CardTitle>
@@ -124,7 +125,8 @@ function ElectronicsForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="value">Estimated Current Value ($)</Label>
-            <Input id="value" type="number" placeholder="e.g., 1800" required {...register("value")} />
+            <Input id="value" type="number" placeholder="e.g., 1800" {...register("value", { required: "Value is required" })} />
+            {errors.value && <p className="text-sm text-destructive">{errors.value.message as string}</p>}
           </div>
 
            <Separator />
@@ -169,19 +171,14 @@ function ElectronicsForm() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
+    </AssetFormLayout>
   );
 }
 
 export default function AddElectronicsPage() {
-    const searchParams = useSearchParams();
-    const assetId = searchParams.get('assetId');
-    const isEditing = !!assetId;
-
     return (
-        <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
-             <Suspense fallback={<div>Loading...</div>}>
-                <ElectronicsForm />
-            </Suspense>
-        </AssetFormLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+            <ElectronicsForm />
+        </Suspense>
     )
 }

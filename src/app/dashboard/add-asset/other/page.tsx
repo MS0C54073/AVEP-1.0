@@ -25,11 +25,11 @@ function OtherAssetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
-  const { register, handleSubmit, setValue, watch } = useForm();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
   const isEditing = !!assetId;
 
   useEffect(() => {
-    if (assetId) {
+    if (isEditing) {
       const asset = manualAssets.find(a => a.id === assetId);
       if (asset && asset.category === "Other") {
         setValue("asset-name", asset.name);
@@ -39,7 +39,7 @@ function OtherAssetForm() {
         setValue("police-station", asset.details?.policeStation);
       }
     }
-  }, [assetId, setValue]);
+  }, [assetId, isEditing, setValue]);
 
   const onSubmit = (data:any) => {
     const assetData = { 
@@ -61,6 +61,7 @@ function OtherAssetForm() {
   };
 
   return (
+    <AssetFormLayout title={isEditing ? "Edit Custom Asset" : "Submit Custom Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Asset Details</CardTitle>
@@ -83,7 +84,8 @@ function OtherAssetForm() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="value">Estimated Value ($)</Label>
-            <Input id="value" type="number" placeholder="e.g., 75000" required {...register("value")} />
+            <Input id="value" type="number" placeholder="e.g., 75000" {...register("value", { required: "Value is required" })} />
+            {errors.value && <p className="text-sm text-destructive">{errors.value.message as string}</p>}
           </div>
 
           <Separator />
@@ -128,20 +130,15 @@ function OtherAssetForm() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
+    </AssetFormLayout>
   );
 }
 
 
 export default function AddOtherAssetPage() {
-    const searchParams = useSearchParams();
-    const assetId = searchParams.get('assetId');
-    const isEditing = !!assetId;
-
     return (
-        <AssetFormLayout title={isEditing ? "Edit Custom Asset" : "Submit Custom Asset"}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <OtherAssetForm />
-            </Suspense>
-        </AssetFormLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+            <OtherAssetForm />
+        </Suspense>
     )
 }
