@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
@@ -25,8 +25,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
+import { useEffect } from 'react';
 
-export default function AddRealEstatePage() {
+
+function RealEstateForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -72,7 +74,6 @@ export default function AddRealEstatePage() {
   };
 
   return (
-    <AssetFormLayout title={isEditing ? "Edit Real Estate Asset" : "Submit Real Estate Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Property Details</CardTitle>
@@ -161,6 +162,19 @@ export default function AddRealEstatePage() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
-    </AssetFormLayout>
   );
+}
+
+export default function AddRealEstatePage() {
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const isEditing = !!assetId;
+
+    return (
+        <AssetFormLayout title={isEditing ? "Edit Real Estate Asset" : "Submit Real Estate Asset"}>
+            <Suspense fallback={<div>Loading...</div>}>
+                <RealEstateForm />
+            </Suspense>
+        </AssetFormLayout>
+    )
 }

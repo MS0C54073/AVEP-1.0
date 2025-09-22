@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
@@ -19,8 +19,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useEffect } from 'react';
 
-export default function AddJewelryPage() {
+
+function JewelryForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -59,7 +61,6 @@ export default function AddJewelryPage() {
   };
 
   return (
-    <AssetFormLayout title={isEditing ? "Edit Jewelry Asset" : "Submit Jewelry Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Jewelry Details</CardTitle>
@@ -123,6 +124,19 @@ export default function AddJewelryPage() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
-    </AssetFormLayout>
   );
+}
+
+export default function AddJewelryPage() {
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const isEditing = !!assetId;
+
+    return (
+        <AssetFormLayout title={isEditing ? "Edit Jewelry Asset" : "Submit Jewelry Asset"}>
+            <Suspense fallback={<div>Loading...</div>}>
+                <JewelryForm />
+            </Suspense>
+        </AssetFormLayout>
+    )
 }

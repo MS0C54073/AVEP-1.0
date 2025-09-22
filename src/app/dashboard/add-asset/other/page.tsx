@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
@@ -19,8 +19,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useEffect } from 'react';
 
-export default function AddOtherAssetPage() {
+function OtherAssetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -60,7 +61,6 @@ export default function AddOtherAssetPage() {
   };
 
   return (
-    <AssetFormLayout title={isEditing ? "Edit Custom Asset" : "Submit Custom Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Asset Details</CardTitle>
@@ -128,6 +128,20 @@ export default function AddOtherAssetPage() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
-    </AssetFormLayout>
   );
+}
+
+
+export default function AddOtherAssetPage() {
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const isEditing = !!assetId;
+
+    return (
+        <AssetFormLayout title={isEditing ? "Edit Custom Asset" : "Submit Custom Asset"}>
+            <Suspense fallback={<div>Loading...</div>}>
+                <OtherAssetForm />
+            </Suspense>
+        </AssetFormLayout>
+    )
 }

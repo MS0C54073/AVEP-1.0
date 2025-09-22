@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
@@ -24,8 +24,9 @@ import {
 } from "@/components/ui/select";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
+import { useEffect } from 'react';
 
-export default function AddElectronicsPage() {
+function ElectronicsForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const assetId = searchParams.get('assetId');
@@ -73,7 +74,6 @@ export default function AddElectronicsPage() {
     };
 
   return (
-    <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Electronics Details</CardTitle>
@@ -169,6 +169,19 @@ export default function AddElectronicsPage() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
-    </AssetFormLayout>
   );
+}
+
+export default function AddElectronicsPage() {
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const isEditing = !!assetId;
+
+    return (
+        <AssetFormLayout title={isEditing ? "Edit Electronics Asset" : "Submit Electronics Asset"}>
+             <Suspense fallback={<div>Loading...</div>}>
+                <ElectronicsForm />
+            </Suspense>
+        </AssetFormLayout>
+    )
 }

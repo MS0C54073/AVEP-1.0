@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AssetFormLayout } from "@/components/dashboard/asset-form-layout";
@@ -24,8 +24,10 @@ import {
 } from "@/components/ui/select";
 import { createManualAsset, manualAssets, updateManualAsset } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
+import { useEffect } from 'react';
 
-export default function AddVehiclePage() {
+
+function VehicleForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -75,7 +77,6 @@ export default function AddVehiclePage() {
   };
 
   return (
-    <AssetFormLayout title={isEditing ? "Edit Vehicle Asset" : "Submit Vehicle Asset"}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Vehicle Details</CardTitle>
@@ -182,6 +183,19 @@ export default function AddVehiclePage() {
           <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
         </CardFooter>
       </form>
-    </AssetFormLayout>
   );
+}
+
+export default function AddVehiclePage() {
+    const searchParams = useSearchParams();
+    const assetId = searchParams.get('assetId');
+    const isEditing = !!assetId;
+
+    return (
+        <AssetFormLayout title={isEditing ? "Edit Vehicle Asset" : "Submit Vehicle Asset"}>
+            <Suspense fallback={<div>Loading...</div>}>
+                <VehicleForm />
+            </Suspense>
+        </AssetFormLayout>
+    )
 }
