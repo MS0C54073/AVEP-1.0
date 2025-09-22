@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +12,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { notifications } from "@/lib/data";
+import { notifications as initialNotifications, type Notification } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications(currentNotifications =>
+      currentNotifications.map(n => (n.id === id ? { ...n, read: true } : n))
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(currentNotifications =>
+      currentNotifications.map(n => ({ ...n, read: true }))
+    );
+  };
+
   return (
     <DashboardShell
       title="Notifications"
@@ -26,7 +43,7 @@ export default function NotificationsPage() {
               Here is a list of your recent notifications.
             </CardDescription>
           </div>
-          <Button size="sm">
+          <Button size="sm" onClick={handleMarkAllAsRead}>
             <CheckCheck className="mr-2 h-4 w-4" />
             Mark all as read
           </Button>
@@ -63,7 +80,7 @@ export default function NotificationsPage() {
                   </p>
                 </div>
                 {!notification.read && (
-                    <Button variant="ghost" size="sm">Mark as read</Button>
+                    <Button variant="ghost" size="sm" onClick={() => handleMarkAsRead(notification.id)}>Mark as read</Button>
                 )}
               </div>
             ))}
