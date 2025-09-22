@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -27,8 +29,6 @@ import { useEffect } from 'react';
 
 
 function RealEstateForm() {
-  "use client";
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
@@ -161,8 +161,7 @@ function RealEstateForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>
-        </CardFooter>
+          <Button type="submit" className="w-full sm:w-auto">{isEditing ? "Save Changes" : "Submit for Verification"}</Button>        </CardFooter>
       </form>
     </AssetFormLayout>
   );

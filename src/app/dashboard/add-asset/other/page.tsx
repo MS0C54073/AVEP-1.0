@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -20,8 +22,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useEffect } from 'react';
 
 function OtherAssetForm() {
-  "use client";
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');

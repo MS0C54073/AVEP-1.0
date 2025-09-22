@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -21,8 +23,6 @@ import { useEffect } from 'react';
 
 
 function JewelryForm() {
-  "use client";
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const assetId = searchParams.get('assetId');
